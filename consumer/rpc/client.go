@@ -44,7 +44,7 @@ func (c *Client) Dial() (*Client, error) {
 		}
 		c.conn = conn.(*net.TCPConn)
 		c.connReader = bufio.NewReader(c.conn)
-		c.connWriter = concurrent.NewWriter(c.conn)
+		c.connWriter = concurrent.NewWriterSize(c.conn, 1024 * 1024)
 		go c.input()
 	})
 	return c, err
