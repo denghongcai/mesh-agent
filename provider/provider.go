@@ -49,6 +49,7 @@ func (p *Provider) refreshEtcdTask() {
 	if err != nil {
 		panic(err)
 	}
+	log.Println("registed to etcd")
 	for {
 		select {
 		case <- p.closeChan:

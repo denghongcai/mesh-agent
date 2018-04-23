@@ -20,4 +20,4 @@ COPY start-agent.sh /usr/local/bin
 
 RUN set -ex && mkdir -p /root/logs
 
-# ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
