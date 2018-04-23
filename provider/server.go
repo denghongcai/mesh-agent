@@ -3,24 +3,27 @@ package provider
 import (
 	"net"
 	"log"
+	"fmt"
 	"github.com/denghongcai/mesh-agent/provider/rpc"
 )
 
 type Server struct {
 	servicePort int
+	listenPort int
 }
 
-func NewServer(servicePort int) *Server {
+func NewServer(servicePort int, listenPort int) *Server {
 	return &Server{servicePort:servicePort}
 }
 
 func (s *Server) Run() error {
-	l, err := net.Listen("tcp", "0.0.0.0:30000")
+	addr := fmt.Sprintf("0.0.0.0:%d", s.listenPort)
+	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
 	defer l.Close()
-	log.Println("provider listening...")
+	log.Printf("provider listening on %s\n", addr)
 
 	for {
 		conn, err := l.Accept()

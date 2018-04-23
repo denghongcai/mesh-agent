@@ -14,11 +14,12 @@ type Provider struct {
 	interfaceName string
 	version string
 	servicePort int
+	listenPort int
 	closeChan chan bool
 	etcdRegistry mesh_agent.Registry
 }
 
-func NewProvider(name string, version string, servicePort int, etcdEndpoint string) *Provider {
+func NewProvider(name string, version string, servicePort int, listenPort int, etcdEndpoint string) *Provider {
 	etcdConfig := make(map[string]interface{})
 	etcdEndpoints := []string{etcdEndpoint}
 	etcdConfig["endpoints"] = etcdEndpoints
@@ -27,6 +28,7 @@ func NewProvider(name string, version string, servicePort int, etcdEndpoint stri
 		interfaceName:name,
 		version:version,
 		servicePort:servicePort,
+		listenPort:listenPort,
 		closeChan: make(chan bool),
 		etcdRegistry:registry.NewEtcdRegistry(etcdConfig),
 	}
@@ -34,7 +36,7 @@ func NewProvider(name string, version string, servicePort int, etcdEndpoint stri
 
 func (p *Provider) Run() {
 	log.Println("provider is running...")
-	server := NewServer(p.servicePort)
+	server := NewServer(p.servicePort, p.listenPort)
 	go p.refreshEtcdTask()
 	server.Run()
 }
@@ -44,12 +46,12 @@ func (p *Provider) Close() {
 }
 
 func (p *Provider) refreshEtcdTask() {
-	addr := fmt.Sprintf("%s:%d", p.localIp, 30000)
+	addr := fmt.Sprintf("%s:%d", p.localIp, p.listenPort)
 	err := p.etcdRegistry.RegisterService(p.interfaceName, p.version, addr)
 	if err != nil {
 		panic(err)
 	}
-	log.Println("registed to etcd")
+	log.Printf("registed to etcd, %s\n", addr)
 	for {
 		select {
 		case <- p.closeChan:
