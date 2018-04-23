@@ -55,6 +55,7 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 			for wresp := range watchChan {
 				for _, ev := range wresp.Events {
 					log.Printf("%s %q : %q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
+					
 					h.mutex.Lock()
 					providers := h.providerMap[fullName]
 					if ev.Type == clientv3.EventTypeDelete && string(ev.Kv.Value) == "" {
@@ -117,7 +118,7 @@ func (h *Handler) Call(request *entity.Request) (interface{}, error) {
 	d := elapsed.Nanoseconds() / 1e6
 	c.AddCallTimes(int64(d))
 
-	log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
+	// log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
 	return call.Result, call.Error
 }
 
