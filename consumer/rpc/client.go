@@ -144,7 +144,7 @@ func (c *Client) GetWeight() int64 {
 	c.weightMutex.Lock()
 	defer c.weightMutex.Unlock()
 	if c.callTimes == 0 {
-		return 1
+		return 0
 	}
 	return int64(c.rt / c.callTimes)
 }

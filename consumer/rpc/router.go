@@ -11,6 +11,9 @@ func selectRoute(chances []int64) int {
 	}
 	var sumOfChances float64
 	for _, chance := range chances {
+		if chance == 0 {
+			return rand.Intn(chancesLength)
+		}
 		sumOfChances = sumOfChances + (1 / float64(chance))
 	}
 
