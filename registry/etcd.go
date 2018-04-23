@@ -6,6 +6,7 @@ import (
 	"path"
 	"github.com/coreos/etcd/clientv3"
 	"time"
+	"strings"
 )
 
 const ETCD_PREFIX = "/mesh-agent"
@@ -29,7 +30,7 @@ func (e *EtcdRegistry) RegisterService(name string, version string, addr string)
 		return nil
 	} else {
 		e.getLeaseId()
-		_, err := e.client.Put(ctx, path.Join(ETCD_PREFIX, name, version), addr, clientv3.WithLease(e.leaseId))
+		_, err := e.client.Put(ctx, path.Join(ETCD_PREFIX, name, version, addr), "ready", clientv3.WithLease(e.leaseId))
 		cancel()
 		if err != nil {
 			return err
@@ -48,7 +49,7 @@ func (e *EtcdRegistry) WatchServicePeers(name string, version string) (clientv3.
 	}
 	peers := make([]string, 0)
 	for _, n := range resp.Kvs {
-		peers = append(peers, string(n.Value))
+		peers = append(peers, strings.Replace(string(n.Key), k + "/", "", -1))
 	}
 	rch := e.client.Watch(context.Background(), k, clientv3.WithPrefix())
 	return rch, peers, nil
