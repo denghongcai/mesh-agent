@@ -13,7 +13,7 @@ type Server struct {
 }
 
 func NewServer(servicePort int, listenPort int) *Server {
-	return &Server{servicePort:servicePort}
+	return &Server{servicePort:servicePort,listenPort:listenPort}
 }
 
 func (s *Server) Run() error {
