@@ -17,7 +17,7 @@ elif [[ "$1" == "provider-medium" ]]; then
   /root/dists/agent --etcdEndPoint $ETCD_URL --role provider --listenPort 30001 --servicePort 20890 > /root/logs/std.log 2>&1 
 elif [[ "$1" == "provider-large" ]]; then
   echo "Starting large provider agent..."
-  /root/dists/agent --etcdEndPoint $ETCD_URL --role provider --listenPort 30002--servicePort 20891 > /root/logs/std.log 2>&1 
+  /root/dists/agent --etcdEndPoint $ETCD_URL --role provider --listenPort 30002 --servicePort 20891 > /root/logs/std.log 2>&1 
 else
   echo "Unrecognized arguments, exit."
   exit 1
