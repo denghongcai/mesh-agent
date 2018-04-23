@@ -6,6 +6,7 @@ import (
 	"github.com/denghongcai/mesh-agent/consumer/rpc"
 	"github.com/json-iterator/go"
 	"log"
+	"time"
 )
 
 type HTTPServer struct {
@@ -22,6 +23,9 @@ func (h *HTTPServer) Run() error {
 }
 
 func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
+	start := time.Now()
+
+	// log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
 	req, err := entity.NewRequest(ctx.ConnID(), ctx.PostArgs())
 	if err != nil {
 		ctx.SetStatusCode(500)
@@ -40,4 +44,9 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 	ctx.SetContentType("application/json; charset=utf8")
 	ctx.SetStatusCode(200)
 	ctx.SetBody(body)
+
+	elapsed := time.Since(start)
+	d := elapsed.Nanoseconds() / 1e6
+
+	log.Printf("elapsed time: %d\n", d)
 }
