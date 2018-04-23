@@ -7,11 +7,11 @@ import (
 )
 
 type Server struct {
-
+	servicePort int
 }
 
-func NewServer() *Server {
-	return &Server{}
+func NewServer(servicePort int) *Server {
+	return &Server{servicePort:servicePort}
 }
 
 func (s *Server) Run() error {
@@ -28,7 +28,7 @@ func (s *Server) Run() error {
 			panic(err)
 		}
 		log.Printf("incomming conn: %#v", conn)
-		rpcHandler := rpc.NewRpcHandler()
+		rpcHandler := rpc.NewRpcHandler(s.servicePort)
 		go rpcHandler.HandleConn(conn)
 	}
 }

@@ -9,13 +9,14 @@ import (
 var role = flag.String("role", "provider", "provider/consumer")
 var interfaceName = flag.String("interfaceName", "test", "interface name")
 var version = flag.String("version", "0.0.0", "version")
+var servicePort = flag.Int("servicePort", 20880, "service port")
 var etcdEndpoint = flag.String("etcdEndPoint", "http://127.0.0.1:2379", "etcd endpoint")
 
 func main() {
 	flag.Parse()
 
 	if *role == "provider" {
-		providerIns := provider.NewProvider(*interfaceName, *version, *etcdEndpoint)
+		providerIns := provider.NewProvider(*interfaceName, *version, *servicePort, *etcdEndpoint)
 		providerIns.Run()
 	} else if *role == "consumer" {
 		consumerIns := consumer.NewConsumer(*etcdEndpoint)

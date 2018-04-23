@@ -13,11 +13,12 @@ type Provider struct {
 	localIp string
 	interfaceName string
 	version string
+	servicePort int
 	closeChan chan bool
 	etcdRegistry mesh_agent.Registry
 }
 
-func NewProvider(name string, version string, etcdEndpoint string) *Provider {
+func NewProvider(name string, version string, servicePort int, etcdEndpoint string) *Provider {
 	etcdConfig := make(map[string]interface{})
 	etcdEndpoints := []string{etcdEndpoint}
 	etcdConfig["endpoints"] = etcdEndpoints
@@ -25,6 +26,7 @@ func NewProvider(name string, version string, etcdEndpoint string) *Provider {
 		localIp:util.GetLocalIP(),
 		interfaceName:name,
 		version:version,
+		servicePort:servicePort,
 		closeChan: make(chan bool),
 		etcdRegistry:registry.NewEtcdRegistry(etcdConfig),
 	}
@@ -32,7 +34,7 @@ func NewProvider(name string, version string, etcdEndpoint string) *Provider {
 
 func (p *Provider) Run() {
 	log.Println("provider is running...")
-	server := NewServer()
+	server := NewServer(p.servicePort)
 	go p.refreshEtcdTask()
 	server.Run()
 }

@@ -5,14 +5,16 @@ import (
 	"sync"
 	"io"
 	"log"
+	"fmt"
 )
 
 type Handler struct {
 	clientConn *net.TCPConn
+	servicePort int
 }
 
-func NewRpcHandler() *Handler {
-	return &Handler{}
+func NewRpcHandler(servicePort int) *Handler {
+	return &Handler{servicePort:servicePort}
 }
 
 // naive
@@ -47,7 +49,7 @@ func (r *Handler) HandleConn(conn net.Conn) {
 }
 
 func (r *Handler) dialToServer() {
-	conn, err := net.Dial("tcp", "127.0.0.1:20880")
+	conn, err := net.Dial("tcp", fmt.Sprintf("127.0.0.1:%d", r.servicePort))
 	if err != nil {
 		panic(err)
 	}
