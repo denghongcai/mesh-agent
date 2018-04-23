@@ -43,6 +43,7 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 			etcdRegistry.Close()
 			return nil, errors.New("no provider available")
 		}
+		log.Printf("provider list: %#v\n", providerList)
 		providers := make([]*Client, len(providerList))
 		for i, v := range providerList {
 			providers[i] = NewClient(v)
@@ -116,7 +117,7 @@ func (h *Handler) Call(request *entity.Request) (interface{}, error) {
 	d := elapsed.Nanoseconds() / 1e6
 	c.AddCallTimes(int64(d))
 
-	// log.Printf("call elapsed time: %d\n", d)
+	log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
 	return call.Result, call.Error
 }
 
