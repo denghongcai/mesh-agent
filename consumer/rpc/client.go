@@ -65,6 +65,9 @@ func (c *Client) input() {
 		c.mutex.Unlock()
 		result, ok := res.GetData().(*protocol.Result)
 		if !ok {
+			if call == nil {
+				continue
+			}
 			call.Error = errors.New("unexpected error")
 			call.done()
 			continue
