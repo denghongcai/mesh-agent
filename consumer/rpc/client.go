@@ -67,7 +67,7 @@ func (c *Client) input() {
 		if !ok {
 			call.Error = errors.New("unexpected error")
 			call.done()
-			return
+			continue
 		}
 		switch {
 		case call == nil:
