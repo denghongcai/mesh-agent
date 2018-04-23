@@ -6,10 +6,10 @@ import (
 )
 
 type Client struct {
-	workers []*Worker
-	addr string
+	workers       []*Worker
+	addr          string
 	parallelLimit int
-	workerConfig *CodecConfig
+	workerConfig  *CodecConfig
 }
 
 func (c *Client) Close() {
@@ -20,7 +20,7 @@ func (c *Client) Close() {
 
 func (c *Client) Run() error {
 	var wg sync.WaitGroup
-	for i := range [c.parallelLimit]int{} {
+	for i := range make([]int, c.parallelLimit) {
 		conn, err := net.Dial("tcp", c.addr)
 		if err != nil {
 			return err
@@ -40,9 +40,9 @@ func (c *Client) Run() error {
 
 func NewClient(addr string, parallelLimit int, config *CodecConfig) *Client {
 	return &Client{
-		addr:addr,
-		parallelLimit:parallelLimit,
-		workers:make([]*Worker, parallelLimit),
-		workerConfig:config,
+		addr:          addr,
+		parallelLimit: parallelLimit,
+		workers:       make([]*Worker, parallelLimit),
+		workerConfig:  config,
 	}
 }
