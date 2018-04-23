@@ -116,7 +116,7 @@ func (h *Handler) Call(request *entity.Request) (interface{}, error) {
 	d := elapsed.Nanoseconds() / 1e6
 	c.AddCallTimes(int64(d))
 
-	log.Printf("call elapsed time: %d\n", d)
+	// log.Printf("call elapsed time: %d\n", d)
 	return call.Result, call.Error
 }
 
