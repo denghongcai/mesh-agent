@@ -63,7 +63,12 @@ func (c *Client) input() {
 		call := c.pendingCall[seq]
 		delete(c.pendingCall, seq)
 		c.mutex.Unlock()
-		result := res.GetData().(*protocol.Result)
+		result, ok := res.GetData().(*protocol.Result)
+		if !ok {
+			call.Error = errors.New("unexpected error")
+			call.done()
+			return
+		}
 		switch {
 		case call == nil:
 			panic("boom")
