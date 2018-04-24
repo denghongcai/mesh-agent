@@ -19,10 +19,11 @@ type Provider struct {
 	etcdRegistry mesh_agent.Registry
 }
 
-func NewProvider(name string, version string, servicePort int, listenPort int, etcdEndpoint string) *Provider {
+func NewProvider(name string, version string, servicePort int, listenPort int, weight int, etcdEndpoint string) *Provider {
 	etcdConfig := make(map[string]interface{})
 	etcdEndpoints := []string{etcdEndpoint}
 	etcdConfig["endpoints"] = etcdEndpoints
+	etcdConfig["weight"] = weight
 	return &Provider{
 		localIp:util.GetLocalIP(),
 		interfaceName:name,
@@ -30,7 +31,7 @@ func NewProvider(name string, version string, servicePort int, listenPort int, e
 		servicePort:servicePort,
 		listenPort:listenPort,
 		closeChan: make(chan bool),
-		etcdRegistry:registry.NewEtcdRegistry(etcdConfig),
+		etcdRegistry:registry.NewEtcdRegisitry(etcdConfig),
 	}
 }
 

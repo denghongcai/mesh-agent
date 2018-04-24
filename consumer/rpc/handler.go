@@ -9,6 +9,8 @@ import (
 	"github.com/getlantern/errors"
 	"github.com/coreos/etcd/clientv3"
 	"time"
+	"strings"
+	"strconv"
 )
 
 type Handler struct {
@@ -44,11 +46,15 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 			return nil, errors.New("no provider available")
 		}
 		log.Printf("provider list: %#v\n", providerList)
-		providersLen := len(providerList)
-		providers := make([]*Client, 2 * providersLen)
-		for i, v := range providerList {
-			providers[i] = NewClient(v)
-			providers[i + providersLen] = NewClient(v)
+		providers := make([]*Client, 0)
+		for _, v := range providerList {
+			args := strings.Split(v, "-")
+			l, _ := strconv.Atoi(args[1])
+			p := make([]*Client, l)
+			for i, _ := range p {
+				p[i] = NewClient(args[0])
+			}
+			providers = append(providers, p...)
 		}
 		h.providerMap[fullName] = providers
 

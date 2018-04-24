@@ -11,13 +11,13 @@ if [[ "$1" == "consumer" ]]; then
   /root/dists/agent --etcdEndPoint $ETCD_URL --role consumer --listenPort 20000 > /root/logs/std.log 2>&1 
 elif [[ "$1" == "provider-small" ]]; then
   echo "Starting small provider agent..."
-  /root/dists/agent --etcdEndPoint $ETCD_URL --role provider --interfaceName com.alibaba.dubbo.performance.demo.provider.IHelloService --listenPort 30000 --servicePort 20889 > /root/logs/std.log 2>&1 
+  /root/dists/agent --etcdEndPoint $ETCD_URL --weight 1 --role provider --interfaceName com.alibaba.dubbo.performance.demo.provider.IHelloService --listenPort 30000 --servicePort 20889 > /root/logs/std.log 2>&1 
 elif [[ "$1" == "provider-medium" ]]; then
   echo "Starting medium provider agent..."
-  /root/dists/agent --etcdEndPoint $ETCD_URL --role provider --interfaceName com.alibaba.dubbo.performance.demo.provider.IHelloService --listenPort 30001 --servicePort 20890 > /root/logs/std.log 2>&1 
+  /root/dists/agent --etcdEndPoint $ETCD_URL --weight 2 --role provider --interfaceName com.alibaba.dubbo.performance.demo.provider.IHelloService --listenPort 30001 --servicePort 20890 > /root/logs/std.log 2>&1 
 elif [[ "$1" == "provider-large" ]]; then
   echo "Starting large provider agent..."
-  /root/dists/agent --etcdEndPoint $ETCD_URL --role provider --interfaceName com.alibaba.dubbo.performance.demo.provider.IHelloService --listenPort 30002 --servicePort 20891 > /root/logs/std.log 2>&1 
+  /root/dists/agent --etcdEndPoint $ETCD_URL --weight 3 --role provider --interfaceName com.alibaba.dubbo.performance.demo.provider.IHelloService --listenPort 30002 --servicePort 20891 > /root/logs/std.log 2>&1 
 else
   echo "Unrecognized arguments, exit."
   exit 1

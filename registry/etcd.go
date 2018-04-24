@@ -7,12 +7,14 @@ import (
 	"github.com/coreos/etcd/clientv3"
 	"time"
 	"strings"
+	"strconv"
 )
 
 const ETCD_PREFIX = "/mesh-agent"
 
 type EtcdRegistry struct {
 	client *clientv3.Client
+	weight int
 	leaseId clientv3.LeaseID
 }
 
@@ -30,7 +32,7 @@ func (e *EtcdRegistry) RegisterService(name string, version string, addr string)
 		return nil
 	} else {
 		e.getLeaseId()
-		_, err := e.client.Put(ctx, path.Join(ETCD_PREFIX, name, version, addr), "ready", clientv3.WithLease(e.leaseId))
+		_, err := e.client.Put(ctx, path.Join(ETCD_PREFIX, name, version, addr), strconv.Itoa(e.weight), clientv3.WithLease(e.leaseId))
 		cancel()
 		if err != nil {
 			return err
@@ -49,7 +51,7 @@ func (e *EtcdRegistry) WatchServicePeers(name string, version string) (clientv3.
 	}
 	peers := make([]string, 0)
 	for _, n := range resp.Kvs {
-		peers = append(peers, strings.Replace(string(n.Key), k + "/", "", -1))
+		peers = append(peers, strings.Replace(string(n.Key), k + "/", "", -1) + "-" + string(n.Value))
 	}
 	rch := e.client.Watch(context.Background(), k, clientv3.WithPrefix())
 	return rch, peers, nil
@@ -72,6 +74,10 @@ func NewEtcdRegistry(config map[string]interface{}) mesh_agent.Registry {
 	}
 	e := &EtcdRegistry{
 		client:c,
+	}
+	_, ok := config["weight"]
+	if ok {
+		e.weight = config["weight"].(int)
 	}
 	return e
 }
