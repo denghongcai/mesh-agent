@@ -29,7 +29,7 @@ func NewRpcHandler(etcdEndpoint string) *Handler {
 func (h *Handler) getProvider(interfaceName string, version string) (*Client, error) {
 	fullName := path.Join(interfaceName, version)
 	h.mutex.Lock()
-	defer h.mutex.Unlock()
+	// defer h.mutex.Unlock()
 	if h.providerMap[fullName] == nil {
 		etcdConfig := make(map[string]interface{})
 		etcdEndpoints := []string{h.etcdEndpoint}
@@ -91,6 +91,7 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 			panic("etcd stop watch")
 		}()
 	}
+  h.mutex.Unlock()
 	providers := h.providerMap[fullName]
 	providersLen := len(providers)
 	chances := make([]int64, providersLen)

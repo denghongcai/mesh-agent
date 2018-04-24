@@ -4,7 +4,17 @@ import (
 	"bytes"
 	"github.com/json-iterator/go"
 	"bufio"
+	"sync"
 )
+
+var bufPool = sync.Pool{
+	New: func() interface{} {
+		// The Pool's New function should generally only return pointer
+		// types, since a pointer can be put into the return interface
+		// value without an allocation:
+		return new(bytes.Buffer)
+	},
+}
 
 type FastJsonSerialization struct {
 	contentTypeId int
@@ -12,9 +22,11 @@ type FastJsonSerialization struct {
 }
 
 func NewFastJsonSerialization() *FastJsonSerialization {
+	buf := bufPool.Get().(*bytes.Buffer)
+	buf.Reset()
 	return &FastJsonSerialization{
 		contentTypeId:6,
-		buf:bytes.NewBuffer(make([]byte, 0)),
+		buf:buf,
 	}
 }
 
@@ -28,6 +40,10 @@ func (s *FastJsonSerialization) GetBuffer() *bytes.Buffer {
 
 func (s *FastJsonSerialization) GetBytes() []byte {
 	return s.buf.Bytes()
+}
+
+func (s *FastJsonSerialization) Release() {
+	bufPool.Put(s.buf)
 }
 
 func (s *FastJsonSerialization) WriteObject(data interface{}) error {

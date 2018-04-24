@@ -14,6 +14,7 @@ type Request struct {
 	isBroken bool
 	event int
 	data interface{}
+	output *serialize.FastJsonSerialization
 }
 
 func NewRequest(id uint64) *Request {
@@ -39,6 +40,7 @@ func (r *Request) IsHeartBeat() bool {
 
 func (r *Request) Encode(sType string) ([]byte, error) {
 	output := serialize.NewFastJsonSerialization()
+	r.output = output
 	buf := output.GetBuffer()
 	buf.WriteByte(MAGIC_HIGH)
 	buf.WriteByte(MAGIC_LOW)

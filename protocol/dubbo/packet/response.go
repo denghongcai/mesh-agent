@@ -91,7 +91,7 @@ func (r *Response) Decode(reader io.Reader) error {
 			// 	return err
 			// }
 			// rFlag := int(rIFlag.(float64))
-		  bufReader.ReadBytes('\n')
+		  bufReader.Discard(2)
 			rFlag := RESPONSE_VALUE
 			if rFlag == RESPONSE_VALUE {
 				data, err := input.ReadObject()
