@@ -87,11 +87,11 @@ func (r *Response) Decode(reader io.Reader) error {
 			}
 		} else {
 			// rIFlag, err := input.ReadObject()
-			// if err != nil {
-			// 	return err
-			// }
+		  _, err := input.ReadObject()
+			if err != nil {
+				return err
+			}
 			// rFlag := int(rIFlag.(float64))
-		  bufReader.Discard(3)
 			rFlag := RESPONSE_VALUE
 			if rFlag == RESPONSE_VALUE {
 				data, err := input.ReadObject()
