@@ -44,11 +44,11 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	// body, _ := jsoniter.Marshal(res)
+	body, _ := jsoniter.Marshal(res)
 
 	ctx.SetContentType("application/json; charset=utf8")
 	ctx.SetStatusCode(200)
-	ctx.SetBody(res.([]byte))
+	ctx.SetBody(body)
 
 	elapsed := time.Since(start)
 	d := elapsed.Nanoseconds() / 1e6
