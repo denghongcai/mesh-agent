@@ -94,8 +94,17 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 	providers := h.providerMap[fullName]
 	providersLen := len(providers)
 	chances := make([]int64, providersLen)
+	var smallestWeight int64 = 0
 	for i, v := range providers {
 		chances[i] = v.GetWeight()
+	}
+	for _, v := range chances {
+		if v < smallestWeight {
+			smallestWeight = v
+		}
+	}
+	for i, v := range chances {
+		chances[i] = v - smallestWeight
 	}
 	i := selectRoute(chances)
 	provider := providers[i]

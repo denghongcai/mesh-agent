@@ -135,6 +135,10 @@ func (c *Client) writeRequest(call *Call) error {
 
 func (c *Client) AddCallTimes(duration int64) {
 	c.weightMutex.Lock()
+	if c.callTimes > 5 {
+		c.rt = 0
+		c.callTimes = 0
+	}
 	c.rt = c.rt + duration
 	c.callTimes = c.callTimes + 1
 	c.weightMutex.Unlock()

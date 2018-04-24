@@ -7,6 +7,8 @@ import (
 	"runtime/pprof"
 	"log"
 	"os"
+	"syscall"
+	"os/signal"
 )
 
 var role = flag.String("role", "provider", "provider/consumer")
@@ -20,6 +22,17 @@ var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to `file`")
 
 func main() {
 	flag.Parse()
+
+	sigs := make(chan os.Signal, 1)
+	done := make(chan bool, 1)
+
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		sig := <-sigs
+		log.Println(sig)
+		done <- true
+	}()
 
 	if *cpuprofile != "" {
 		f, err := os.Create(*cpuprofile)
@@ -39,4 +52,6 @@ func main() {
 		consumerIns := consumer.NewConsumer(*etcdEndpoint, *listenPort)
 		consumerIns.Run()
 	}
+
+	<- done
 }
