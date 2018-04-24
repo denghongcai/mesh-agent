@@ -4,7 +4,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"github.com/denghongcai/mesh-agent/consumer/server/entity"
 	"github.com/denghongcai/mesh-agent/consumer/rpc"
-	"github.com/json-iterator/go"
+	// "github.com/json-iterator/go"
 	"log"
 	"time"
 )
