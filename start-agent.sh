@@ -8,7 +8,7 @@ echo ETCD_URL = $ETCD_URL
 
 if [[ "$1" == "consumer" ]]; then
   echo "Starting consumer agent..."
-  /root/dists/agent --etcdEndPoint $ETCD_URL --cpuprofile /root/logs/cpuprofile.log --role consumer --listenPort 20000 > /root/logs/std.log 2>&1 
+  /root/dists/agent --etcdEndPoint $ETCD_URL --role consumer --listenPort 20000 > /root/logs/std.log 2>&1 
 elif [[ "$1" == "provider-small" ]]; then
   echo "Starting small provider agent..."
   /root/dists/agent --etcdEndPoint $ETCD_URL --role provider --interfaceName com.alibaba.dubbo.performance.demo.provider.IHelloService --listenPort 30000 --servicePort 20889 > /root/logs/std.log 2>&1 
