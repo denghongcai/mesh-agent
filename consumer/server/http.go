@@ -23,6 +23,7 @@ func (h *HTTPServer) Run() error {
 		Handler: h.requestHandler,
 		Concurrency: 512,
 		DisableHeaderNamesNormalizing: false,
+		DisableKeepalive: true,
 	}
 	return s.ListenAndServe(h.addr)
 }
