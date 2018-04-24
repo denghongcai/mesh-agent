@@ -48,7 +48,7 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 
 	ctx.SetContentType("application/json; charset=utf8")
 	ctx.SetStatusCode(200)
-	ctx.SetBody(body.([]byte))
+	ctx.SetBody(res.([]byte))
 
 	elapsed := time.Since(start)
 	d := elapsed.Nanoseconds() / 1e6
