@@ -45,11 +45,10 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 		}
 		log.Printf("provider list: %#v\n", providerList)
 		providersLen := len(providerList)
-		providers := make([]*Client, 3 * providersLen)
+		providers := make([]*Client, 2 * providersLen)
 		for i, v := range providerList {
 			providers[i] = NewClient(v)
 			providers[i + providersLen] = NewClient(v)
-			providers[i + 2 * providersLen] = NewClient(v)
 		}
 		h.providerMap[fullName] = providers
 
