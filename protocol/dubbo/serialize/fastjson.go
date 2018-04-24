@@ -55,15 +55,16 @@ func (d *FastJsonDeserialization) GetReader() *bufio.Reader {
 }
 
 func (d *FastJsonDeserialization) ReadObject() (interface{}, error) {
-	var obj interface{}
+	// var obj interface{}
 	// TODO separator
 	b, err := d.reader.ReadBytes('\n')
 	if err != nil {
 		return nil, err
 	}
-	err = jsoniter.Unmarshal(b, &obj)
-	if err != nil {
-		return nil, err
-	}
-	return obj, nil
+	return b, nil
+	// err = jsoniter.Unmarshal(b, &obj)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// return obj, nil
 }
