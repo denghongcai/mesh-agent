@@ -19,7 +19,12 @@ func NewHTTPServer(addr string, rpcHandler *rpc.Handler) *HTTPServer {
 }
 
 func (h *HTTPServer) Run() error {
-	return fasthttp.ListenAndServe(h.addr, h.requestHandler)
+	s := &fasthttp.Server{
+		Handler: h.requestHandler,
+		Concurrency: 512,
+		DisableHeaderNamesNormalizing: false,
+	}
+	return s.ListenAndServe(h.addr)
 }
 
 func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
