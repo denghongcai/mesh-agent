@@ -2,11 +2,9 @@ package server
 
 import (
 	"log"
-	"time"
 
 	"code.aliyun.com/denghongcai/mesh-agent/consumer/rpc"
 	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
-	"code.aliyun.com/denghongcai/mesh-agent/throttle"
 	"github.com/json-iterator/go"
 	"github.com/valyala/fasthttp"
 )
@@ -30,17 +28,16 @@ func (h *HTTPServer) Run() error {
 }
 
 func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
-	start := time.Now()
+	// start := time.Now()
 
-	throttle.SleepWithPooledTimer(50 * time.Millisecond)
-	ctx.SetStatusCode(500)
-	return
 	// log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
 	req, err := entity.NewRequest(ctx.ConnID(), ctx.PostArgs())
-	if err == nil {
+	if err != nil {
 		ctx.SetStatusCode(500)
 		return
 	}
+
+	defer req.Release()
 
 	res, err := h.rpcHandler.Call(req)
 	if err != nil {
@@ -55,8 +52,8 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(200)
 	ctx.SetBody(body)
 
-	elapsed := time.Since(start)
-	d := elapsed.Nanoseconds() / 1e6
+	// elapsed := time.Since(start)
+	// d := elapsed.Nanoseconds() / 1e6
 
-	log.Printf("elapsed time: %d\n", d)
+	// log.Printf("elapsed time: %d\n", d)
 }

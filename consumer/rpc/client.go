@@ -136,6 +136,7 @@ func (c *Client) writeRequest(call *Call) error {
 		return err
 	}
 	c.connWriter.Flush()
+	req.Release()
 	return nil
 }
 
@@ -162,12 +163,12 @@ func (c *Client) GetWeight() int64 {
 func (c *Client) Go(request *entity.Request) *Call {
 	attachments := make(map[string]string)
 	attachments["dubbo"] = "2.6.0"
-	attachments["path"] = request.GetInterface()
-	attachments["interface"] = request.GetInterface()
+	attachments["path"] = request.Interface
+	attachments["interface"] = request.Interface
 	attachments["version"] = "0.0.0"
-	inv := packet.NewInvocation(request.GetMethod(), []interface{}{request.GetParameter()}, attachments)
-	inv.SetArgTypesString(request.GetParameterTypesString())
-	call := &Call{Seq: request.GetSeq(), Inv: inv, Done: make(chan *Call, 1)}
+	inv := packet.NewInvocation(request.Method, []interface{}{request.Parameter}, attachments)
+	inv.SetArgTypesString(request.ParameterTypesString)
+	call := &Call{Seq: request.Seq, Inv: inv, Done: make(chan *Call, 1)}
 
 	c.send(call)
 	return call

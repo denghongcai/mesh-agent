@@ -1,30 +1,31 @@
 package rpc
 
 import (
-	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
-	"sync"
-	"path"
-	"code.aliyun.com/denghongcai/mesh-agent/registry"
 	"log"
-	"github.com/getlantern/errors"
-	"github.com/coreos/etcd/clientv3"
-	"time"
-	"strings"
+	"path"
 	"strconv"
+	"strings"
+	"sync"
+	"time"
+
+	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
+	"code.aliyun.com/denghongcai/mesh-agent/registry"
+	"github.com/coreos/etcd/clientv3"
+	"github.com/getlantern/errors"
 )
 
 type Handler struct {
-	mutex sync.Mutex
+	mutex       sync.Mutex
 	pendingCall map[uint64]*Call
 
 	etcdEndpoint string
-	providerMap map[string][]*Client
+	providerMap  map[string][]*Client
 }
 
 func NewRpcHandler(etcdEndpoint string) *Handler {
 	return &Handler{
-		etcdEndpoint:etcdEndpoint,
-		providerMap:make(map[string][]*Client),
+		etcdEndpoint: etcdEndpoint,
+		providerMap:  make(map[string][]*Client),
 	}
 }
 
@@ -59,7 +60,7 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 			for wresp := range watchChan {
 				for _, ev := range wresp.Events {
 					log.Printf("%s %q : %q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
-					
+
 					h.mutex.Lock()
 					providers := h.providerMap[fullName]
 					if ev.Type == clientv3.EventTypeDelete && string(ev.Kv.Value) == "" {
@@ -95,7 +96,7 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 			panic("etcd stop watch")
 		}()
 	}
-  h.mutex.Unlock()
+	h.mutex.Unlock()
 	providers := h.providerMap[fullName]
 	providersLen := len(providers)
 	chances := make([]int64, providersLen)
@@ -121,12 +122,12 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 }
 
 func (h *Handler) Call(request *entity.Request) (interface{}, error) {
-	c, err := h.getProvider(request.GetInterface(), "0.0.0")
+	c, err := h.getProvider(request.Interface, "0.0.0")
 	if err != nil {
 		return nil, err
 	}
 	start := time.Now()
-	call := <- c.Go(request).Done
+	call := <-c.Go(request).Done
 	elapsed := time.Since(start)
 
 	d := elapsed.Nanoseconds() / 1e6
@@ -135,4 +136,3 @@ func (h *Handler) Call(request *entity.Request) (interface{}, error) {
 	// log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
 	return call.Result, call.Error
 }
-

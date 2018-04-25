@@ -1,24 +1,25 @@
 package packet
 
 import (
-	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/serialize"
 	"encoding/binary"
+
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/serialize"
 	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/util"
 )
 
 type Request struct {
-	id uint64
-	version string
+	id       uint64
+	version  string
 	isTwoWay bool
-	isEvent bool
+	isEvent  bool
 	isBroken bool
-	event int
-	data interface{}
-	output *serialize.FastJsonSerialization
+	event    int
+	data     interface{}
+	output   *serialize.FastJsonSerialization
 }
 
 func NewRequest(id uint64) *Request {
-	return &Request{id:id, isTwoWay:true}
+	return &Request{id: id, isTwoWay: true}
 }
 
 func (r *Request) GetData() interface{} {
@@ -36,6 +37,12 @@ func (r *Request) SetEvent(event []byte) {
 
 func (r *Request) IsHeartBeat() bool {
 	return r.isEvent && r.event == HEARTBEAT_EVENT
+}
+
+func (r *Request) Release() {
+	// if r.output != nil {
+	r.output.Release()
+	// }
 }
 
 func (r *Request) Encode(sType string) ([]byte, error) {
@@ -96,5 +103,3 @@ func (r *Request) Encode(sType string) ([]byte, error) {
 	binary.BigEndian.PutUint32(finalBytes[12:], uint32(bodyLen))
 	return finalBytes, nil
 }
-
-
