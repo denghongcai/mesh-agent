@@ -1,10 +1,10 @@
 package rpc
 
 import (
-	"github.com/denghongcai/mesh-agent/consumer/server/entity"
+	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
 	"sync"
 	"path"
-	"github.com/denghongcai/mesh-agent/registry"
+	"code.aliyun.com/denghongcai/mesh-agent/registry"
 	"log"
 	"github.com/getlantern/errors"
 	"github.com/coreos/etcd/clientv3"

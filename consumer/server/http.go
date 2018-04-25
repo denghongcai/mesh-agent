@@ -4,9 +4,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/denghongcai/mesh-agent/consumer/rpc"
-	"github.com/denghongcai/mesh-agent/consumer/server/entity"
-	"github.com/denghongcai/mesh-agent/throttle"
+	"code.aliyun.com/denghongcai/mesh-agent/consumer/rpc"
+	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
+	"code.aliyun.com/denghongcai/mesh-agent/throttle"
 	"github.com/json-iterator/go"
 	"github.com/valyala/fasthttp"
 )

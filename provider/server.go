@@ -4,7 +4,7 @@ import (
 	"net"
 	"log"
 	"fmt"
-	"github.com/denghongcai/mesh-agent/provider/rpc"
+	"code.aliyun.com/denghongcai/mesh-agent/provider/rpc"
 )
 
 type Server struct {

@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"github.com/denghongcai/mesh-agent/protocol"
-	"github.com/denghongcai/mesh-agent/protocol/internal/packet"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/internal/packet"
 	"io"
 )
 

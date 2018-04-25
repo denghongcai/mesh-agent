@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"github.com/denghongcai/mesh-agent/protocol/dubbo/packet"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/packet"
 )
 
 type Call struct {

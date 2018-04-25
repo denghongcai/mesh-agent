@@ -1,7 +1,7 @@
 package registry
 
 import (
-	"github.com/denghongcai/mesh-agent"
+	"code.aliyun.com/denghongcai/mesh-agent"
 	"context"
 	"path"
 	"github.com/coreos/etcd/clientv3"

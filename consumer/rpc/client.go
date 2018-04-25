@@ -6,10 +6,10 @@ import (
 	"net"
 	"sync"
 
-	"github.com/denghongcai/mesh-agent/consumer/server/entity"
-	"github.com/denghongcai/mesh-agent/protocol"
-	"github.com/denghongcai/mesh-agent/protocol/dubbo/packet"
-	"github.com/denghongcai/mesh-agent/resync"
+	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/packet"
+	"code.aliyun.com/denghongcai/mesh-agent/resync"
 	"github.com/free/concurrent-writer/concurrent"
 	"github.com/getlantern/errors"
 )

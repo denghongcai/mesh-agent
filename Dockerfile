@@ -1,10 +1,10 @@
 # Builder container
 FROM golang:1-stretch AS builder
 
-COPY . /go/src/github.com/denghongcai/mesh-agent
+COPY . /go/src/code.aliyun.com/denghongcai/mesh-agent
 WORKDIR /go
-RUN cd /go/src/github.com/denghongcai/mesh-agent && go get -v -t ./...
-RUN go build -i -o /go/bin/agent /go/src/github.com/denghongcai/mesh-agent/bin/bin.go
+RUN cd /go/src/code.aliyun.com/denghongcai/mesh-agent && go get -v -t ./...
+RUN go build -i -o /go/bin/agent /go/src/code.aliyun.com/denghongcai/mesh-agent/bin/bin.go
 
 FROM registry.cn-hangzhou.aliyuncs.com/tianchi4-docker/tianchi4-services AS builder-1
 

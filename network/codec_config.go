@@ -1,6 +1,6 @@
 package network
 
-import "github.com/denghongcai/mesh-agent/protocol"
+import "code.aliyun.com/denghongcai/mesh-agent/protocol"
 
 type CodecConfig struct {
 	WriteChan chan interface{}

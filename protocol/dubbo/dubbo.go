@@ -1,8 +1,8 @@
 package dubbo
 
 import (
-	"github.com/denghongcai/mesh-agent/protocol/dubbo/packet"
-	"github.com/denghongcai/mesh-agent/protocol"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/packet"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol"
 	"io"
 )
 

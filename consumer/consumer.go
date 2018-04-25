@@ -1,11 +1,11 @@
 package consumer
 
 import (
-	"github.com/denghongcai/mesh-agent/consumer/server"
+	"code.aliyun.com/denghongcai/mesh-agent/consumer/server"
 	"sync"
 	"log"
 	"fmt"
-	"github.com/denghongcai/mesh-agent/consumer/rpc"
+	"code.aliyun.com/denghongcai/mesh-agent/consumer/rpc"
 )
 
 type Consumer struct {

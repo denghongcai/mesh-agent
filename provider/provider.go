@@ -1,10 +1,10 @@
 package provider
 
 import (
-	"github.com/denghongcai/mesh-agent/provider/util"
+	"code.aliyun.com/denghongcai/mesh-agent/provider/util"
 	"time"
-	"github.com/denghongcai/mesh-agent/registry"
-	"github.com/denghongcai/mesh-agent"
+	"code.aliyun.com/denghongcai/mesh-agent/registry"
+	"code.aliyun.com/denghongcai/mesh-agent"
 	"fmt"
 	"log"
 )

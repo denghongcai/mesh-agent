@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/denghongcai/mesh-agent/provider"
-	"github.com/denghongcai/mesh-agent/consumer"
+	"code.aliyun.com/denghongcai/mesh-agent/provider"
+	"code.aliyun.com/denghongcai/mesh-agent/consumer"
 	"runtime/pprof"
 	"log"
 	"os"

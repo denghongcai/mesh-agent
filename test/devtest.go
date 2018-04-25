@@ -2,7 +2,7 @@ package main
 
 import (
 	"net"
-	"github.com/denghongcai/mesh-agent/protocol/dubbo/packet"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/packet"
 	"bufio"
 	"fmt"
 )

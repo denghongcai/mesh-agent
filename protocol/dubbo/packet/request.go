@@ -1,9 +1,9 @@
 package packet
 
 import (
-	"github.com/denghongcai/mesh-agent/protocol/dubbo/serialize"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/serialize"
 	"encoding/binary"
-	"github.com/denghongcai/mesh-agent/protocol/dubbo/util"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/util"
 )
 
 type Request struct {

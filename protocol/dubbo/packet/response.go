@@ -1,8 +1,8 @@
 package packet
 
 import (
-	"github.com/denghongcai/mesh-agent/protocol/dubbo/serialize"
-	"github.com/denghongcai/mesh-agent/protocol"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/serialize"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol"
 	"encoding/binary"
 	"io"
 	"bufio"
