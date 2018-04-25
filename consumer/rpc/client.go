@@ -21,6 +21,7 @@ type Client struct {
 	connOnce sync.Once
 	rt int64
 	callTimes int64
+	weightFactor int64
 	addr string
 	connReader *bufio.Reader
 	connWriter *concurrent.Writer
@@ -29,8 +30,8 @@ type Client struct {
 	shutdown bool
 }
 
-func NewClient(addr string) *Client {
-	return &Client{addr:addr, pendingCall:make(map[uint64]*Call), shutdown:false}
+func NewClient(addr string, weightFactor int) *Client {
+	return &Client{addr:addr, pendingCall:make(map[uint64]*Call), shutdown:false, weightFactor: int64(weightFactor)}
 }
 
 func (c *Client) Dial() (*Client, error) {
@@ -150,7 +151,7 @@ func (c *Client) GetWeight() int64 {
 	if c.callTimes == 0 {
 		return 0
 	}
-	return int64(c.rt / c.callTimes)
+	return (c.rt / c.callTimes) / c.weightFactor
 }
 
 func (c *Client) Go(request *entity.Request) *Call {
