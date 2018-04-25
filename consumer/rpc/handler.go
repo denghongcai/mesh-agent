@@ -85,7 +85,7 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 					}
 					if ev.Type == clientv3.EventTypePut {
 						if !present {
-							h.providerMap[fullName] = append(providers, NewClient(addr))
+							// h.providerMap[fullName] = append(providers, NewClient(addr))
 						}
 					}
 					log.Printf("current %s providers %#v\n", fullName, h.providerMap[fullName])
