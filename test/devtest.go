@@ -9,15 +9,12 @@ import (
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "127.0.0.1:30001")
+	conn, err := net.Dial("tcp", "192.168.1.220:20880")
 	if err != nil {
 		// handle error
 	}
-	attachments := make(map[string]string)
-	attachments["dubbo"] = "2.6.0"
+	attachments := make(map[string]interface{})
 	attachments["path"] = "com.alibaba.dubbo.performance.demo.provider.IHelloService"
-	attachments["interface"] = "com.alibaba.dubbo.performance.demo.provider.IHelloService"
-	attachments["version"] = "0.0.0"
 
 	args := []string{"1111"}
 	s := make([]interface{}, len(args))
@@ -27,7 +24,7 @@ func main() {
 
 	req := packet.NewRequest(1)
 
-	inv := packet.NewInvocation("hash", s, attachments)
+	inv := packet.NewInvocation([]byte("hash"), s, attachments)
 
 	req.SetData(inv)
 

@@ -2,6 +2,7 @@ package packet
 
 import (
 	"encoding/binary"
+	"log"
 
 	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/serialize"
 	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/util"
@@ -70,9 +71,9 @@ func (r *Request) Encode(sType string) ([]byte, error) {
 
 	inv, ok := r.data.(*Invocation)
 	if ok {
-		output.WriteByteString(inv.GetAttachments()[DUBBO_VERSION_KEY].([]byte))
-		output.WriteByteString(inv.GetAttachments()[PATH_KEY].([]byte))
-		output.WriteByteString(inv.GetAttachments()[VERSION_KEY].([]byte))
+		output.WriteByteString(nil)
+		output.WriteByteString(nil)
+		output.WriteByteString(nil)
 
 		output.WriteByteString(inv.GetMethodName())
 
@@ -80,6 +81,7 @@ func (r *Request) Encode(sType string) ([]byte, error) {
 		if argTypesString == nil {
 			argTypesString = []byte(util.GetJavaArgsDesc(inv.GetArgs()))
 		}
+		log.Printf("%#v", inv.GetArgs())
 		output.WriteByteString(argTypesString)
 
 		argsString, ok := inv.GetArgs().([]byte)
@@ -90,7 +92,7 @@ func (r *Request) Encode(sType string) ([]byte, error) {
 				output.WriteObject(arg)
 			}
 		}
-		// output.WriteObject(inv.GetAttachments())
+		output.WriteObject(inv.GetAttachments())
 	} else {
 		err := output.WriteObject(r.data)
 		if err != nil {

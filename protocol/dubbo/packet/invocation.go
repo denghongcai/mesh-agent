@@ -8,9 +8,9 @@ type Invocation struct {
 }
 
 func NewInvocation(methodName []byte, args interface{}, attachments map[string]interface{}) *Invocation {
-	if attachments[DUBBO_VERSION_KEY] == "" {
-		attachments[DUBBO_VERSION_KEY] = DUBBO_VERSION
-	}
+	// if attachments[DUBBO_VERSION_KEY] == "" {
+	// 	attachments[DUBBO_VERSION_KEY] = DUBBO_VERSION
+	// }
 	return &Invocation{
 		methodName:  methodName,
 		args:        args,

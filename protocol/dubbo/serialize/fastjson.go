@@ -59,7 +59,9 @@ func (s *FastJsonSerialization) WriteObject(data interface{}) error {
 
 func (s *FastJsonSerialization) WriteByteString(data []byte) error {
 	s.buf.WriteByte('"')
-	s.buf.Write(data)
+	if data != nil {
+		s.buf.Write(data)
+	}
 	s.buf.WriteByte('"')
 	s.buf.WriteByte('\n')
 	return nil

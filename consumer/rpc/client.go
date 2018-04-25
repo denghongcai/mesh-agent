@@ -160,15 +160,9 @@ func (c *Client) GetWeight() int64 {
 	return (c.rt / c.callTimes) / c.weightFactor
 }
 
-var DUBBO_VERSION_BYTES = []byte("2.6.0")
-var INTERFACE_VERSION_BYTES = []byte("0.0.0")
-
 func (c *Client) Go(request *entity.Request) *Call {
 	attachments := make(map[string]interface{})
-	attachments["dubbo"] = DUBBO_VERSION_BYTES
-	attachments["path"] = request.Interface
-	attachments["interface"] = request.Interface
-	attachments["version"] = INTERFACE_VERSION_BYTES
+	attachments["path"] = string(request.Interface)
 	inv := packet.NewInvocation(request.Method, []interface{}{request.Parameter}, attachments)
 	inv.SetArgTypesString(request.ParameterTypesString)
 	call := &Call{Seq: request.Seq, Inv: inv, Done: make(chan *Call, 1)}
