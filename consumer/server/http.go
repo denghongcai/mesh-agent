@@ -6,6 +6,7 @@ import (
 
 	"github.com/denghongcai/mesh-agent/consumer/rpc"
 	"github.com/denghongcai/mesh-agent/consumer/server/entity"
+	"github.com/denghongcai/mesh-agent/throttle"
 	"github.com/json-iterator/go"
 	"github.com/valyala/fasthttp"
 )
@@ -31,7 +32,7 @@ func (h *HTTPServer) Run() error {
 func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 	start := time.Now()
 
-	time.Sleep(50 * time.Millisecond)
+	throttle.SleepWithPooledTimer(50 * time.Millisecond)
 	ctx.SetStatusCode(500)
 	return
 	// log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
