@@ -32,6 +32,8 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 	start := time.Now()
 
 	time.Sleep(50 * time.Millisecond)
+	ctx.SetStatusCode(500)
+	return
 	// log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
 	req, err := entity.NewRequest(ctx.ConnID(), ctx.PostArgs())
 	if err == nil {
