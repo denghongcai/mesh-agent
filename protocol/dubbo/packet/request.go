@@ -2,7 +2,6 @@ package packet
 
 import (
 	"encoding/binary"
-	"log"
 
 	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/serialize"
 	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/util"
@@ -81,7 +80,6 @@ func (r *Request) Encode(sType string) ([]byte, error) {
 		if argTypesString == nil {
 			argTypesString = []byte(util.GetJavaArgsDesc(inv.GetArgs()))
 		}
-		log.Printf("%#v", inv.GetArgs())
 		output.WriteByteString(argTypesString)
 
 		argsString, ok := inv.GetArgs().([]byte)
