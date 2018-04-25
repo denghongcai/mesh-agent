@@ -44,7 +44,7 @@ func (c *Client) Dial() (*Client, error) {
 			log.Println(err)
 			return
 		}
-		c.shutdown = true
+		c.shutdown = false
 		c.conn = conn.(*net.TCPConn)
 		c.connReader = bufio.NewReader(c.conn)
 		c.connWriter = concurrent.NewWriterSize(c.conn, 1024 * 1024)
