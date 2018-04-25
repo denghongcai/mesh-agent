@@ -122,7 +122,7 @@ func (h *Handler) getProvider(interfaceName string, version string) (*Client, er
 }
 
 func (h *Handler) Call(request *entity.Request) (interface{}, error) {
-	c, err := h.getProvider(request.Interface, "0.0.0")
+	c, err := h.getProvider(string(request.Interface), "0.0.0")
 	if err != nil {
 		return nil, err
 	}

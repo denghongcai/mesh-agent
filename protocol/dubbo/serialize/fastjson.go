@@ -1,10 +1,11 @@
 package serialize
 
 import (
-	"bytes"
-	"github.com/json-iterator/go"
 	"bufio"
+	"bytes"
 	"sync"
+
+	"github.com/json-iterator/go"
 )
 
 var bufPool = sync.Pool{
@@ -18,15 +19,15 @@ var bufPool = sync.Pool{
 
 type FastJsonSerialization struct {
 	contentTypeId int
-	buf *bytes.Buffer
+	buf           *bytes.Buffer
 }
 
 func NewFastJsonSerialization() *FastJsonSerialization {
 	buf := bufPool.Get().(*bytes.Buffer)
 	buf.Reset()
 	return &FastJsonSerialization{
-		contentTypeId:6,
-		buf:buf,
+		contentTypeId: 6,
+		buf:           buf,
 	}
 }
 
@@ -52,6 +53,14 @@ func (s *FastJsonSerialization) WriteObject(data interface{}) error {
 		return err
 	}
 	s.buf.Write(json)
+	s.buf.WriteByte('\n')
+	return nil
+}
+
+func (s *FastJsonSerialization) WriteByteString(data []byte) error {
+	s.buf.WriteByte('"')
+	s.buf.Write(data)
+	s.buf.WriteByte('"')
 	s.buf.WriteByte('\n')
 	return nil
 }

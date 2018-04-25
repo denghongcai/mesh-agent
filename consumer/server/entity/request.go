@@ -17,10 +17,10 @@ var reqPool = sync.Pool{
 
 type Request struct {
 	Seq                  uint64
-	Interface            string `json:"interface"`
-	Method               string `json:"method"`
-	ParameterTypesString string `json:"parameterTypesString"`
-	Parameter            string `json:"parameter"`
+	Interface            []byte
+	Method               []byte
+	ParameterTypesString []byte
+	Parameter            []byte
 }
 
 func (r *Request) Release() {
@@ -30,9 +30,9 @@ func (r *Request) Release() {
 func NewRequest(seq uint64, args *fasthttp.Args) (*Request, error) {
 	req := reqPool.Get().(*Request)
 	req.Seq = seq
-	req.Interface = string(args.Peek("interface"))
-	req.Method = string(args.Peek("method"))
-	req.ParameterTypesString = string(args.Peek("parameterTypesString"))
-	req.Parameter = string(args.Peek("parameter"))
+	req.Interface = args.Peek("interface")
+	req.Method = args.Peek("method")
+	req.ParameterTypesString = args.Peek("parameterTypesString")
+	req.Parameter = args.Peek("parameter")
 	return req, nil
 }

@@ -40,9 +40,9 @@ func (r *Request) IsHeartBeat() bool {
 }
 
 func (r *Request) Release() {
-	// if r.output != nil {
-	r.output.Release()
-	// }
+	if r.output != nil {
+		r.output.Release()
+	}
 }
 
 func (r *Request) Encode(sType string) ([]byte, error) {
@@ -70,27 +70,27 @@ func (r *Request) Encode(sType string) ([]byte, error) {
 
 	inv, ok := r.data.(*Invocation)
 	if ok {
-		output.WriteObject(inv.GetAttachments()[DUBBO_VERSION_KEY])
-		output.WriteObject(inv.GetAttachments()[PATH_KEY])
-		output.WriteObject(inv.GetAttachments()[VERSION_KEY])
+		output.WriteByteString(inv.GetAttachments()[DUBBO_VERSION_KEY].([]byte))
+		output.WriteByteString(inv.GetAttachments()[PATH_KEY].([]byte))
+		output.WriteByteString(inv.GetAttachments()[VERSION_KEY].([]byte))
 
-		output.WriteObject(inv.GetMethodName())
+		output.WriteByteString(inv.GetMethodName())
 
 		argTypesString := inv.GetArgTypesString()
-		if argTypesString == "" {
-			argTypesString = util.GetJavaArgsDesc(inv.GetArgs())
+		if argTypesString == nil {
+			argTypesString = []byte(util.GetJavaArgsDesc(inv.GetArgs()))
 		}
-		output.WriteObject(argTypesString)
+		output.WriteByteString(argTypesString)
 
-		argsString, ok := inv.GetArgs().(string)
+		argsString, ok := inv.GetArgs().([]byte)
 		if ok {
-			output.WriteObject(argsString)
+			output.WriteByteString(argsString)
 		} else {
 			for _, arg := range inv.GetArgs().([]interface{}) {
 				output.WriteObject(arg)
 			}
 		}
-		output.WriteObject(inv.GetAttachments())
+		// output.WriteObject(inv.GetAttachments())
 	} else {
 		err := output.WriteObject(r.data)
 		if err != nil {

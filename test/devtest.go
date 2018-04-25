@@ -1,10 +1,11 @@
 package main
 
 import (
-	"net"
-	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/packet"
 	"bufio"
 	"fmt"
+	"net"
+
+	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/packet"
 )
 
 func main() {
@@ -33,6 +34,8 @@ func main() {
 	b, _ := req.Encode("fastjson")
 
 	conn.Write(b)
+
+	req.Release()
 
 	fmt.Printf("write to server\n")
 

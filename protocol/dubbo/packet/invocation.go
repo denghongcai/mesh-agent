@@ -1,36 +1,36 @@
 package packet
 
 type Invocation struct {
-	methodName string
-	args interface{}
-	attachments map[string]string
-	argTypesString string
+	methodName     []byte
+	args           interface{}
+	attachments    map[string]interface{}
+	argTypesString []byte
 }
 
-func NewInvocation(methodName string, args interface{}, attachments map[string]string) *Invocation {
+func NewInvocation(methodName []byte, args interface{}, attachments map[string]interface{}) *Invocation {
 	if attachments[DUBBO_VERSION_KEY] == "" {
 		attachments[DUBBO_VERSION_KEY] = DUBBO_VERSION
 	}
 	return &Invocation{
-		methodName:methodName,
-		args:args,
-		attachments:attachments,
+		methodName:  methodName,
+		args:        args,
+		attachments: attachments,
 	}
 }
 
-func (i *Invocation) GetAttachments() map[string]string {
+func (i *Invocation) GetAttachments() map[string]interface{} {
 	return i.attachments
 }
 
-func (i *Invocation) GetMethodName() string {
+func (i *Invocation) GetMethodName() []byte {
 	return i.methodName
 }
 
-func (i *Invocation) SetArgTypesString(s string) {
+func (i *Invocation) SetArgTypesString(s []byte) {
 	i.argTypesString = s
 }
 
-func (i *Invocation) GetArgTypesString() string {
+func (i *Invocation) GetArgTypesString() []byte {
 	return i.argTypesString
 }
 
