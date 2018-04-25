@@ -31,7 +31,7 @@ func NewProvider(name string, version string, servicePort int, listenPort int, w
 		servicePort:servicePort,
 		listenPort:listenPort,
 		closeChan: make(chan bool),
-		etcdRegistry:registry.NewEtcdRegisitry(etcdConfig),
+		etcdRegistry:registry.NewEtcdRegistry(etcdConfig),
 	}
 }
 
