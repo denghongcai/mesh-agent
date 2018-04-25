@@ -1,38 +1,39 @@
 package rpc
 
 import (
-	"github.com/denghongcai/mesh-agent/consumer/server/entity"
-	"github.com/denghongcai/mesh-agent/protocol/dubbo/packet"
+	"bufio"
+	"log"
 	"net"
 	"sync"
-	"bufio"
+
+	"github.com/denghongcai/mesh-agent/consumer/server/entity"
 	"github.com/denghongcai/mesh-agent/protocol"
+	"github.com/denghongcai/mesh-agent/protocol/dubbo/packet"
 	"github.com/denghongcai/mesh-agent/resync"
-	"github.com/getlantern/errors"
-	"log"
 	"github.com/free/concurrent-writer/concurrent"
+	"github.com/getlantern/errors"
 )
 
 var ErrShutdown = errors.New("connection is shut down")
 
 type Client struct {
-	mutex sync.Mutex
+	mutex       sync.Mutex
 	weightMutex sync.Mutex
 
-	connOnce resync.Once
-	rt int64
-	callTimes int64
+	connOnce     resync.Once
+	rt           int64
+	callTimes    int64
 	weightFactor int64
-	addr string
-	connReader *bufio.Reader
-	connWriter *concurrent.Writer
-	conn *net.TCPConn
-	pendingCall map[uint64]*Call
-	shutdown bool
+	addr         string
+	connReader   *bufio.Reader
+	connWriter   *concurrent.Writer
+	conn         *net.TCPConn
+	pendingCall  map[uint64]*Call
+	shutdown     bool
 }
 
 func NewClient(addr string, weightFactor int) *Client {
-	return &Client{addr:addr, pendingCall:make(map[uint64]*Call), shutdown:false, weightFactor: int64(weightFactor)}
+	return &Client{addr: addr, pendingCall: make(map[uint64]*Call), shutdown: false, weightFactor: int64(weightFactor)}
 }
 
 func (c *Client) Dial() (*Client, error) {
@@ -44,10 +45,11 @@ func (c *Client) Dial() (*Client, error) {
 			log.Println(err)
 			return
 		}
+		log.Printf("connected to %s", c.addr)
 		c.shutdown = false
 		c.conn = conn.(*net.TCPConn)
 		c.connReader = bufio.NewReader(c.conn)
-		c.connWriter = concurrent.NewWriterSize(c.conn, 1024 * 1024)
+		c.connWriter = concurrent.NewWriterSize(c.conn, 1024*1024)
 		go c.input()
 	})
 	return c, err
@@ -165,9 +167,8 @@ func (c *Client) Go(request *entity.Request) *Call {
 	attachments["version"] = "0.0.0"
 	inv := packet.NewInvocation(request.GetMethod(), []interface{}{request.GetParameter()}, attachments)
 	inv.SetArgTypesString(request.GetParameterTypesString())
-	call := &Call{Seq:request.GetSeq(), Inv:inv, Done:make(chan *Call, 1)}
+	call := &Call{Seq: request.GetSeq(), Inv: inv, Done: make(chan *Call, 1)}
 
 	c.send(call)
 	return call
 }
-
