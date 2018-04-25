@@ -7,6 +7,7 @@ import (
 	"sync"
 	"bufio"
 	"github.com/denghongcai/mesh-agent/protocol"
+	"github.com/denghongcai/mesh-agent/resync"
 	"github.com/getlantern/errors"
 	"log"
 	"github.com/free/concurrent-writer/concurrent"
@@ -18,7 +19,7 @@ type Client struct {
 	mutex sync.Mutex
 	weightMutex sync.Mutex
 
-	connOnce sync.Once
+	connOnce resync.Once
 	rt int64
 	callTimes int64
 	weightFactor int64
@@ -43,6 +44,7 @@ func (c *Client) Dial() (*Client, error) {
 			log.Println(err)
 			return
 		}
+		c.shutdown = true
 		c.conn = conn.(*net.TCPConn)
 		c.connReader = bufio.NewReader(c.conn)
 		c.connWriter = concurrent.NewWriterSize(c.conn, 1024 * 1024)
@@ -87,6 +89,7 @@ func (c *Client) input() {
 
 	c.mutex.Lock()
 	c.shutdown = true
+	c.connOnce.Reset()
 	for _, call := range c.pendingCall {
 		call.Error = err
 		call.done()
