@@ -1,27 +1,28 @@
 package server
 
 import (
-	"github.com/valyala/fasthttp"
-	"github.com/denghongcai/mesh-agent/consumer/server/entity"
-	"github.com/denghongcai/mesh-agent/consumer/rpc"
-	"github.com/json-iterator/go"
 	"log"
 	"time"
+
+	"github.com/denghongcai/mesh-agent/consumer/rpc"
+	"github.com/denghongcai/mesh-agent/consumer/server/entity"
+	"github.com/json-iterator/go"
+	"github.com/valyala/fasthttp"
 )
 
 type HTTPServer struct {
-	addr string
+	addr       string
 	rpcHandler *rpc.Handler
 }
 
 func NewHTTPServer(addr string, rpcHandler *rpc.Handler) *HTTPServer {
-	return &HTTPServer{addr:addr, rpcHandler:rpcHandler}
+	return &HTTPServer{addr: addr, rpcHandler: rpcHandler}
 }
 
 func (h *HTTPServer) Run() error {
 	s := &fasthttp.Server{
-		Handler: h.requestHandler,
-		Concurrency: 512,
+		Handler:                       h.requestHandler,
+		Concurrency:                   512,
 		DisableHeaderNamesNormalizing: false,
 	}
 	return s.ListenAndServe(h.addr)
@@ -32,7 +33,7 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 
 	// log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
 	req, err := entity.NewRequest(ctx.ConnID(), ctx.PostArgs())
-	if err != nil {
+	if err == nil {
 		ctx.SetStatusCode(500)
 		return
 	}
