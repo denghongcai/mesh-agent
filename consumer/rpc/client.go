@@ -29,12 +29,12 @@ type Client struct {
 	connReader   *bufio.Reader
 	connWriter   *concurrent.Writer
 	conn         *net.TCPConn
-	pendingCall  map[uint64]*Call
+	pendingCall  *sync.Map
 	shutdown     atomic.Value
 }
 
 func NewClient(addr string, weightFactor int) *Client {
-	c := &Client{addr: addr, pendingCall: make(map[uint64]*Call), weightFactor: int64(weightFactor)}
+	c := &Client{addr: addr, pendingCall: new(sync.Map), weightFactor: int64(weightFactor)}
 	c.shutdown.Store(false)
 	return c
 }
@@ -68,8 +68,9 @@ func (c *Client) input() {
 		}
 		seq := res.GetID()
 		// c.mutex.Lock()
-		call := c.pendingCall[seq]
-		delete(c.pendingCall, seq)
+		v, _ := c.pendingCall.Load(seq)
+		call := v.(*Call)
+		c.pendingCall.Delete(seq)
 		// c.mutex.Unlock()
 		result, ok := res.GetData().(*protocol.Result)
 		if !ok {
@@ -95,10 +96,13 @@ func (c *Client) input() {
 	// c.mutex.Lock()
 	c.shutdown.Store(true)
 	c.connOnce.Reset()
-	for _, call := range c.pendingCall {
+	c.pendingCall.Range(func(k, v interface{}) bool {
+		call := v.(*Call)
 		call.Error = err
 		call.done()
-	}
+		c.pendingCall.Delete(k)
+		return true
+	})
 	// c.mutex.Unlock()
 }
 
@@ -109,12 +113,13 @@ func (c *Client) send(call *Call) {
 		call.done()
 		return
 	}
-	c.pendingCall[call.Seq] = call
+	c.pendingCall.Store(call.Seq, call)
 
 	err := c.writeRequest(call)
 	if err != nil {
-		call = c.pendingCall[call.Seq]
-		delete(c.pendingCall, call.Seq)
+		v, _ := c.pendingCall.Load(call.Seq)
+		call := v.(*Call)
+		c.pendingCall.Delete(call.Seq)
 		if call != nil {
 			call.Error = err
 			call.done()
