@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"sync"
+	"sync/atomic"
 
 	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
 	"code.aliyun.com/denghongcai/mesh-agent/protocol"
@@ -29,11 +30,13 @@ type Client struct {
 	connWriter   *concurrent.Writer
 	conn         *net.TCPConn
 	pendingCall  map[uint64]*Call
-	shutdown     bool
+	shutdown     atomic.Value
 }
 
 func NewClient(addr string, weightFactor int) *Client {
-	return &Client{addr: addr, pendingCall: make(map[uint64]*Call), shutdown: false, weightFactor: int64(weightFactor)}
+	c := &Client{addr: addr, pendingCall: make(map[uint64]*Call), weightFactor: int64(weightFactor)}
+	c.shutdown.Store(false)
+	return c
 }
 
 func (c *Client) Dial() (*Client, error) {
@@ -46,7 +49,7 @@ func (c *Client) Dial() (*Client, error) {
 			return
 		}
 		log.Printf("connected to %s", c.addr)
-		c.shutdown = false
+		c.shutdown.Store(false)
 		c.conn = conn.(*net.TCPConn)
 		c.connReader = bufio.NewReader(c.conn)
 		c.connWriter = concurrent.NewWriterSize(c.conn, 1024*1024)
@@ -64,10 +67,10 @@ func (c *Client) input() {
 			break
 		}
 		seq := res.GetID()
-		c.mutex.Lock()
+		// c.mutex.Lock()
 		call := c.pendingCall[seq]
 		delete(c.pendingCall, seq)
-		c.mutex.Unlock()
+		// c.mutex.Unlock()
 		result, ok := res.GetData().(*protocol.Result)
 		if !ok {
 			if call == nil {
@@ -89,33 +92,29 @@ func (c *Client) input() {
 		}
 	}
 
-	c.mutex.Lock()
-	c.shutdown = true
+	// c.mutex.Lock()
+	c.shutdown.Store(true)
 	c.connOnce.Reset()
 	for _, call := range c.pendingCall {
 		call.Error = err
 		call.done()
 	}
-	c.mutex.Unlock()
+	// c.mutex.Unlock()
 }
 
 func (c *Client) send(call *Call) {
-	c.mutex.Lock()
-	if c.shutdown {
+	// race condition
+	if c.shutdown.Load().(bool) {
 		call.Error = ErrShutdown
-		c.mutex.Unlock()
 		call.done()
 		return
 	}
 	c.pendingCall[call.Seq] = call
-	c.mutex.Unlock()
 
 	err := c.writeRequest(call)
 	if err != nil {
-		c.mutex.Lock()
 		call = c.pendingCall[call.Seq]
 		delete(c.pendingCall, call.Seq)
-		c.mutex.Unlock()
 		if call != nil {
 			call.Error = err
 			call.done()
