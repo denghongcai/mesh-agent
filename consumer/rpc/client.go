@@ -69,7 +69,11 @@ func (c *Client) input() {
 		seq := res.GetID()
 		// c.mutex.Lock()
 		v, _ := c.pendingCall.Load(seq)
-		call := v.(*Call)
+		if v == nil {
+			// ignore
+			continue
+		}
+		call, ok := v.(*Call)
 		c.pendingCall.Delete(seq)
 		// c.mutex.Unlock()
 		result, ok := res.GetData().(*protocol.Result)
