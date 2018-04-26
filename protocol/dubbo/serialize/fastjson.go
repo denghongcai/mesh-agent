@@ -86,7 +86,7 @@ func (d *FastJsonDeserialization) ReadNumberString() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return b, nil
+	return b[:len(b) - 1], nil
 }
 
 func (d *FastJsonDeserialization) ReadObject() (interface{}, error) {

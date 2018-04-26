@@ -6,7 +6,6 @@ import (
 	"code.aliyun.com/denghongcai/mesh-agent/consumer/rpc"
 	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
 	"github.com/valyala/fasthttp"
-	"time"
 )
 
 type HTTPServer struct {
@@ -28,7 +27,7 @@ func (h *HTTPServer) Run() error {
 }
 
 func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
-	start := time.Now()
+	//start := time.Now()
 
 	// log.Printf("call with %s, elapsed time: %d\n", c.addr, d)
 	req, err := entity.NewRequest(ctx.ConnID(), ctx.PostArgs())
@@ -52,8 +51,8 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 	ctx.SetStatusCode(200)
 	ctx.SetBody(res.([]byte))
 
-	elapsed := time.Since(start)
-	d := elapsed.Nanoseconds() / 1e6
-
-	log.Printf("elapsed time: %d, hash: %s, data: %s\n", d, string(req.Parameter), string(res.([]byte)))
+	//elapsed := time.Since(start)
+	//d := elapsed.Nanoseconds() / 1e6
+	//
+	//log.Printf("elapsed time: %d\n", d)
 }
