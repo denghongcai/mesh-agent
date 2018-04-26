@@ -55,5 +55,5 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 	elapsed := time.Since(start)
 	d := elapsed.Nanoseconds() / 1e6
 
-	log.Printf("elapsed time: %d, hash: %s, data: %s\n", d, string(req.Parameter), string(res.([]byte)))
+	log.Printf("elapsed time: %d", d)
 }

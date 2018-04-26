@@ -167,7 +167,7 @@ func (c *Client) GetWeight() int64 {
 func (c *Client) Go(request *entity.Request) *Call {
 	attachments := make(map[string]interface{})
 	attachments["path"] = string(request.Interface)
-	inv := packet.NewInvocation(request.Method, []interface{}{request.Parameter}, attachments)
+	inv := packet.NewInvocation(request.Method, request.Parameter, attachments)
 	inv.SetArgTypesString(request.ParameterTypesString)
 	call := &Call{Seq: request.Seq, Inv: inv, Done: make(chan *Call, 1)}
 

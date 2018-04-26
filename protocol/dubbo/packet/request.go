@@ -87,7 +87,12 @@ func (r *Request) Encode(sType string) ([]byte, error) {
 			output.WriteByteString(argsString)
 		} else {
 			for _, arg := range inv.GetArgs().([]interface{}) {
-				output.WriteObject(arg)
+				argBytes, ok := arg.([]byte)
+				if ok {
+					output.WriteByteString(argBytes)
+				} else {
+					output.WriteObject(arg)
+				}
 			}
 		}
 		output.WriteObject(inv.GetAttachments())
