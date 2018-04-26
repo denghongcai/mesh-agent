@@ -81,6 +81,14 @@ func (d *FastJsonDeserialization) GetReader() *bufio.Reader {
 	return d.reader
 }
 
+func (d *FastJsonDeserialization) ReadNumberString() ([]byte, error) {
+	b, err := d.reader.ReadBytes('\n')
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func (d *FastJsonDeserialization) ReadObject() (interface{}, error) {
 	var obj interface{}
 	// TODO separator

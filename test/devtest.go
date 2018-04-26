@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"code.aliyun.com/denghongcai/mesh-agent/protocol/dubbo/packet"
+	"code.aliyun.com/denghongcai/mesh-agent/protocol"
 )
 
 func main() {
@@ -42,7 +43,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("decode: %#v", res.GetData())
+	fmt.Printf("decode: %#v\n", res.GetData())
+	fmt.Printf("decode data: %s", string(res.GetData().(*protocol.Result).Value.([]byte)))
 
 	conn.Close()
 }

@@ -5,7 +5,6 @@ import (
 
 	"code.aliyun.com/denghongcai/mesh-agent/consumer/rpc"
 	"code.aliyun.com/denghongcai/mesh-agent/consumer/server/entity"
-	"github.com/json-iterator/go"
 	"github.com/valyala/fasthttp"
 	"time"
 )
@@ -47,14 +46,14 @@ func (h *HTTPServer) requestHandler(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	body, _ := jsoniter.Marshal(res)
+	//body, _ := jsoniter.Marshal(res)
 
 	ctx.SetContentType("application/json; charset=utf8")
 	ctx.SetStatusCode(200)
-	ctx.SetBody(body)
+	ctx.SetBody(res.([]byte))
 
 	elapsed := time.Since(start)
 	d := elapsed.Nanoseconds() / 1e6
 
-	log.Printf("elapsed time: %d, hash: %s, data: %s\n", d, string(ctx.PostArgs().Peek("parameter")), body)
+	log.Printf("elapsed time: %d, hash: %s, data: %s\n", d, string(ctx.PostArgs().Peek("parameter")), string(res.([]byte)))
 }
