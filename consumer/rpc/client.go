@@ -149,23 +149,23 @@ func (c *Client) writeRequest(call *Call) error {
 }
 
 func (c *Client) AddCallTimes(duration int64) {
-	c.weightMutex.Lock()
-	if c.callTimes > 5 {
-		c.rt = 0
-		c.callTimes = 0
-	}
-	c.rt = c.rt + duration
-	c.callTimes = c.callTimes + 1
-	c.weightMutex.Unlock()
+	//c.weightMutex.Lock()
+	//if c.callTimes > 5 {
+	//	c.rt = 0
+	//	c.callTimes = 0
+	//}
+	//c.rt = c.rt + duration
+	//c.callTimes = c.callTimes + 1
+	//c.weightMutex.Unlock()
 }
 
 func (c *Client) GetWeight() int64 {
-	c.weightMutex.Lock()
-	defer c.weightMutex.Unlock()
-	if c.callTimes == 0 {
-		return 0
-	}
-	return (c.rt / c.callTimes) / c.weightFactor
+	//c.weightMutex.Lock()
+	//defer c.weightMutex.Unlock()
+	//if c.callTimes == 0 {
+	//	return 0
+	//}
+	return 6 / c.weightFactor
 }
 
 func (c *Client) Go(request *entity.Request) *Call {
